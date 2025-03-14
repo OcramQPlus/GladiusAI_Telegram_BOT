@@ -1,0 +1,14 @@
+config.py
+prompts.py
+gemini.py
+__pycache__/
+*.pyc
+
+
+logs
+!logs/
+*.log
+
+
+!feedbacks
+*.feedback

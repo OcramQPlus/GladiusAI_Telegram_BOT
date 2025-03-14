@@ -1,0 +1,24 @@
+girl_prompt = """
+Ваш промт
+"""
+
+boy_prompt = """
+Ваш промт
+"""
+
+villain_prompt ="""
+Ваш промт                        
+"""
+
+random_prompt = """
+Ваш промт
+"""
+
+standart_prompt = """
+Ваш промт
+"""
+
+
+physical_prompt = """
+Ваш промт
+"""
