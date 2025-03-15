@@ -16,11 +16,11 @@ import mistralaibot
 
 from forai import last_request_time
 
-
-
 feedback_router = Router()
+
+feedback_get = {}
+RATE_LIMIT = 5
 feedback_status = False
-RATE_LIMIT = 30
 
 def now_time():
     curent_time = time.time()
@@ -51,62 +51,51 @@ async def feedback_message(message: types.Message):
     
 @feedback_router.callback_query(F.data == "good_feedback")
 async def good_feedback(callback: types.CallbackQuery):
-    global feedback_type_user
-    global feedback_status
-    
     await callback.message.answer("Введите ваш положительный отзыв👍:")
-    feedback_type_user = "good_feedback"
+    feedback_get[callback.from_user.id] = "good_feedback"
+    global feedback_status
     feedback_status = True
-    
+
 @feedback_router.callback_query(F.data == "bad_feedback")
 async def bad_feedback(callback: types.CallbackQuery):
-    global feedback_type_user
-    global feedback_status
-    
     await callback.message.answer("Введите ваш отрицательный отзыв👎:")
-    feedback_type_user = "bad_feedback"
+    feedback_get[callback.from_user.id] = "bad_feedback"
+    global feedback_status
     feedback_status = True
 
-    
 @feedback_router.callback_query(F.data == "idea_feedback")
 async def idea_feedback(callback: types.CallbackQuery):
-    global feedback_type_user
-    global feedback_status
-    
     await callback.message.answer("Введите вашу идею💡:")
-    feedback_type_user = "idea_feedback"
+    feedback_get[callback.from_user.id] = "idea_feedback"
+    global feedback_status
     feedback_status = True
+
     
     
 
-@feedback_router.message()
-async def process_message(message: types.Message):
-    global feedback_status
-    if feedback_status == True:
-        try:
-            user_id = message.from_user.id
-            current_time = time.time()
-            if user_id in last_request_time:
-                time_passed = current_time - last_request_time[user_id]
-                feedback_status = False
-                if time_passed < RATE_LIMIT:
-                    remaining = round(RATE_LIMIT - time_passed, 1)
-                    msg = await message.reply(f"""Попробуйте отсавть отзыв позже
+
+async def feedback_message_write(message: types.Message):
+    user_id = message.from_user.id
+    current_time = time.time()
+    try:
+        if user_id in last_request_time:
+            time_passed = current_time - last_request_time[user_id]
+            if time_passed < RATE_LIMIT:
+                remaining = round(RATE_LIMIT - time_passed, 1)
+                msg = await message.reply(f"""Попробуйте оставить отзыв позже
 Через: {round(remaining)} сек. ⏳ """)
-                    await asyncio.sleep(RATE_LIMIT)
-                    await msg.edit_text("<b>Попробуйте ещё раз🎭</b>", parse_mode=ParseMode.HTML)
-                    return
-            last_request_time[user_id] = current_time
-        except Exception as e:
-            print(f"An error occurred: {e}")
-        user_id = message.from_user.id
-        user_name = message.from_user.username or "Unknown User"
-        print(f"{now_time()} -> Сообщение пользователя ->   {user_name} ({user_id}): {message.text}")
-        logs (user_id, user_name, f"{now_time()} -> Сообщение пользователя -> {user_name} ({user_id}): {message.text}")
-        feedback_type = feedback_type_user
-        feedback_message = message.text
-        feedback(feedback_type, user_id, user_name, f"{now_time()} -> {feedback_type} -> {feedback_message}")
-        await message.reply("Спасибо за ваш отзыв!🤗")
-        feedback_status = False
-    else:
-        await mistralaibot.process_message(message)
+                await asyncio.sleep(RATE_LIMIT)
+                await msg.edit_text("<b>Попробуйте ещё раз🎭</b>", parse_mode=ParseMode.HTML)
+                return
+        last_request_time[user_id] = current_time
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    user_name = message.from_user.username or "Unknown User"
+    print(f"{now_time()} -> Отзыв пользователя ->   {user_name} ({user_id}): {message.text}")
+    logs(user_id, user_name, f"{now_time()} -> Отзыв пользователя -> {user_name} ({user_id}): {message.text}")
+    feedback_type = feedback_get[user_id]
+    feedback_message = message.text
+    feedback(feedback_type, user_id, user_name, f"{now_time()} -> {feedback_type} -> {feedback_message}")
+    await message.reply("Спасибо за ваш отзыв!🤗")
+    del feedback_get[user_id]
+

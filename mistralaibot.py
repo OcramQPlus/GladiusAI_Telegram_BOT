@@ -11,6 +11,7 @@ import time
 
 from logs.logs import logs
 from forai import last_request_time, RATE_LIMIT, now_time, waiting_response_generator
+import feedback
 
 mistralai_router = Router()
 
@@ -21,6 +22,10 @@ async def process_message(message: types.Message):
     if admin.GladiusAI_status == False:
         await message.reply("""GladiusAI на данный момент не работает.
 Попробуйте позже.😓""")
+        return
+    if feedback.feedback_status == True:
+        await feedback.feedback_message_write(message)
+        feedback.feedback_status = False
         return
     try:
         user_id = message.from_user.id
