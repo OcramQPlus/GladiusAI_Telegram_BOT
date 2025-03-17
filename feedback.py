@@ -12,7 +12,7 @@ import time
 import asyncio
 from aiogram.enums import ParseMode
 
-import mistralaibot
+import mistralaiclient
 
 from forai import last_request_time
 

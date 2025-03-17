@@ -15,8 +15,11 @@ import prompts
 
 from logs.logs import logs
 admin_router = Router()
-model = "mistral-large-latest"
+mistral_model = "mistral-large-latest"
+gemini_model = "gemini-2.0-flash"
 GladiusAI_status = True
+ai_right_now = "mistralaiclient"
+default_prompts = prompts.physical_prompt
 
 def now_time():
     curent_time = time.time()
@@ -39,6 +42,7 @@ async def admin_command(message: types.Message):
     admin_menu.row (types.InlineKeyboardButton(text="Изменить языковую модель 👤", callback_data="model_selection_admin"),)
     admin_menu.row (types.InlineKeyboardButton(text="Отладка 🛠", callback_data="debug"),)
     admin_menu.row (types.InlineKeyboardButton(text="ON and OFF 🛑", callback_data="on_off"),)
+    admin_menu.row (types.InlineKeyboardButton(text="Выбрать ИИ 🤖", callback_data="ai_choose"),)
     admin_menu.row (types.InlineKeyboardButton(text="Удалить это сообщение 💥", callback_data="del_admin_menu"),)
     await message.answer("Выберите действие 🧩", reply_markup=admin_menu.as_markup())
     user_id = message.from_user.id
@@ -54,6 +58,30 @@ async def not_admin(message: types.Message):
     print (f"{now_time()} -> /admin ->   {user_name} ({user_id}):")
     logs (user_id, user_name, f"{now_time()} -> /admin ->   {user_name} ({user_id}):")
     
+    
+@admin_router.callback_query(F.data == "ai_choose")
+async def ai_choose(callback: types.CallbackQuery):
+    ai_choose = InlineKeyboardBuilder()
+    ai_choose.row (types.InlineKeyboardButton(text="MistralAI 🌪", callback_data="mistralai"),)
+    ai_choose.row (types.InlineKeyboardButton(text="GeminiAI 🌌", callback_data="geminiai"),)
+    ai_choose.row (types.InlineKeyboardButton(text="Назад ↩", callback_data="back_to_admin_menu"),)
+    await callback.message.edit_text("Выберите ИИ 🤖:", reply_markup=ai_choose.as_markup())
+    await callback.answer()
+
+@admin_router.callback_query(F.data == "mistralai")
+async def mistralai(callback: types.CallbackQuery):
+    global ai_right_now
+    ai_right_now = "mistralaiclient"
+    await callback.message.edit_text("Выбран MistralAI 🌪",reply_markup=admin_menu.as_markup())
+    await callback.answer()
+    
+@admin_router.callback_query(F.data == "geminiai")
+async def geminiai(callback: types.CallbackQuery):
+    global ai_right_now
+    ai_right_now = "geminiaiclient"
+    await callback.message.edit_text("Выбран GeminiAI 🌌",reply_markup=admin_menu.as_markup())
+    await callback.answer()
+
 @admin_router.callback_query(F.data == "on_off")
 async def on_off(callback: types.CallbackQuery):
     on_off_menu = InlineKeyboardBuilder()
@@ -157,38 +185,38 @@ async def promt_choose_admin(callback: types.CallbackQuery):
     await callback.message.edit_text("Выбор персонажа:", reply_markup=promt_selection.as_markup())
 @admin_router.callback_query(F.data == "girl")
 async def girl(callback: types.CallbackQuery):
-    user_id = callback.from_user.id
-    conversations[user_id] = [{"role": "user", "content": prompts.girl_prompt}]  
+    global default_prompts    
+    default_prompts = prompts.girl_prompt
     await callback.message.edit_text("Ответы будут в стиле девочки🎀",reply_markup=admin_menu.as_markup())
 
 @admin_router.callback_query(F.data == "boy")
 async def boy(callback: types.CallbackQuery):
-    user_id = callback.from_user.id
-    conversations[user_id] = [{"role": "user", "content": prompts.boy_prompt}]  
+    global default_prompts    
+    default_prompts = prompts.boy_prompt
     await callback.message.edit_text("Ответы будут в стиле мальчика🏋️‍♀️",reply_markup=admin_menu.as_markup())
 
 @admin_router.callback_query(F.data == "villain")
 async def villain(callback: types.CallbackQuery):
-    user_id = callback.from_user.id
-    conversations[user_id] = [{"role": "user", "content": prompts.villain_prompt}]
+    global default_prompts    
+    default_prompts = prompts.villain_prompt
     await callback.message.edit_text("Ответы будут в стиле злодея😈",reply_markup=admin_menu.as_markup())
 
 @admin_router.callback_query(F.data == "standart")
 async def standart(callback: types.CallbackQuery):
-    user_id = callback.from_user.id
-    conversations[user_id] = [{"role": "user", "content": prompts.standart_prompt}]
+    global default_prompts
+    default_prompts = prompts.standart_prompt
     await callback.message.edit_text("Ответы будут в обычном стиле🤖",reply_markup=admin_menu.as_markup())
 
 @admin_router.callback_query(F.data == "physical")
 async def standart (callback: types.CallbackQuery):
-    user_id = callback.from_user.id
-    conversations[user_id] = [{"role": "user", "content": prompts.physical_prompt}]
+    global default_prompts
+    default_prompts = prompts.physical_prompt
     await callback.message.edit_text("Ответы будут в стиле профессора физики👨‍🏫",reply_markup=admin_menu.as_markup())
 
 @admin_router.callback_query(F.data == "random")
 async def random(callback: types.CallbackQuery):
-    user_id = callback.from_user.id
-    conversations[user_id] = [{"role": "user", "content": prompts.random_prompt}]
+    global default_prompts
+    default_prompts = prompts.random_prompt
     await callback.message.edit_text("Ответы будут в случайном стиле🎰",reply_markup=admin_menu.as_markup())
 
     
