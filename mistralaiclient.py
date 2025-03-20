@@ -1,6 +1,6 @@
 import asyncio
 
-from aiogram import types, Router
+from aiogram import types
 from aiogram.enums import ParseMode
 
 from config  import conversations, mistral_client
@@ -12,16 +12,10 @@ import time
 from logs.logs import logs
 from forai import last_request_time, RATE_LIMIT, now_time, waiting_response_generator
 
-mistralai_router = Router()
 
 
 
-@mistralai_router.message()
-async def process_message(message: types.Message):
-    if admin.GladiusAI_status == False:
-        await message.reply("""GladiusAI на данный момент не работает.
-Попробуйте позже.😓""")
-        return
+async def mistral_answer(message: types.Message):
     try:
         user_id = message.from_user.id
         current_time = time.time()
@@ -51,36 +45,32 @@ async def process_message(message: types.Message):
         if user_id not in conversations:
             conversations[user_id] = []
         if not conversations[user_id]: 
-            conversations[user_id] = [{"role": "system", "content": prompts.physical_prompt}]
+            conversations[user_id] = [{"role": "system", "content": admin.default_prompts}]
             
         conversations[user_id].append({"role": "user", "content": message.text})
         
         if len(conversations[user_id]) > 1000:
-            conversations[user_id] = [{"role": "system", "content": prompts.physical_prompt}] + conversations[user_id][-9:]
+            conversations[user_id] = [{"role": "system", "content": admin.default_prompts}] + conversations[user_id][-9:]
             
         response_text = ""
         
         for chunk in mistral_client.chat.stream(
-            model=admin.model,
+            model=admin.mistral_model,
             messages=conversations[user_id],
         ):
             response_text += chunk.data.choices[0].delta.content or ""
         
         conversations[user_id].append({"role": "assistant", "content": response_text})
         print(f"{now_time()} -> Gladius message ->   {user_name} ({user_id}): {response_text}")
-        print(f"{now_time()} -> Используемая языковая модель ->   {user_name} ({user_id}):", admin.model)
+        print(f"{now_time()} -> Используемая языковая модель ->   {user_name} ({user_id}):", admin.mistral_model)
         logs (user_id, user_name, f"{now_time()} -> Gladius message -> {user_name} ({user_id}): {response_text}")
-        logs (user_id, user_name, f"{now_time()} -> Используемая языковая модель -> {user_name} ({user_id}): {admin.model}")
+        logs (user_id, user_name, f"{now_time()} -> Используемая языковая модель -> {user_name} ({user_id}): {admin.mistral_model}")
         
-
-
         if admin.debug_mode == True:
-            debug_model = f"\nМодель: {admin.model}"
+            debug_model = f"\nМодель: {admin.mistral_model}"
             await waiting_msg.edit_text(response_text + debug_model)
         else:
             await waiting_msg.edit_text(response_text)
-
-
             
     except Exception as e:
         print(f"{now_time()} -> [Error]: {str(e)}")

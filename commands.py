@@ -25,7 +25,7 @@ async def send_welcome(message: types.Message):
     user_name = message.from_user.username or "Unknown User"
     conversations[user_id] = []
     await message.reply("""
-Привет! Я - Профессор физики Galadius👨‍🎓, помогу тебе с любыми вопросами по физике.
+Привет! Я - Профессор физики Gladius👨‍🎓, помогу тебе с любыми вопросами по физике.
 Что бы узнать боьше информации о боте, напиши /help    
                         """)
     print(f"{now_time()} -> /start ->   {user_name} ({user_id}):")

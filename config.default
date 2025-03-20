@@ -1,10 +1,9 @@
 from aiogram import Bot, Dispatcher
 from mistralai import Mistral
-
-
+from google import genai
 ADMIN = [ADMIN_ID_TELEGRAM] # type: ignore
 mistral_client = Mistral(api_key="YOUR_MISTRAL_API_KEY")
 GladiusAI_Bot = Bot(token='YOUR_TELEGRAM_BOT_TOKEN')
+gemini_client = genai.Client(api_key="YOUR_GEMINI_API_KEY", http_options={'api_version':'v1alpha'})
 GladiusAI = Dispatcher()
-
 conversations = {}
