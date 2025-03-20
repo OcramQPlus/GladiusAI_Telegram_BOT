@@ -19,8 +19,12 @@ async def user_message_get(message: types.Message):
         feedback.feedback_status = False
         return
     match admin.ai_right_now:
-        case "mistralaiclient":
+        case "mistral_ai_client":
             await mistralaiclient.mistral_answer(message)
-        case "geminiaiclient":
+            user_id = message.from_user.id
+            admin.conversations[user_id] = []
+        case "gemini_ai_client":
             await geminiaiclient.gemini_answer(message)
+            user_id = message.from_user.id
+            admin.conversations[user_id] = []
         

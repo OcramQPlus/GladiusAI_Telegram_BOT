@@ -54,8 +54,13 @@ async def gemini_answer(message: types.Message):
         logs(user_id, user_name, f"{now_time()} -> Gladius message -> {user_name} ({user_id}): {response_text}")
         logs(user_id, user_name, f"{now_time()} -> Используемая языковая модель -> {user_name} ({user_id}): {admin.gemini_model}")
         
+        if admin.debug_mode == True:
+            debug_model = f"\nМодель: {admin.gemini_model}"
+            await waiting_msg.edit_text(response_text + debug_model)
+        else:
+            await waiting_msg.edit_text(response_text)
+        
     except Exception as e:
         print(f"{now_time()} -> [Error]: {str(e)}")
         logs(user_id, user_name, f"{now_time()} -> [Error]: {str(e)}")
         await waiting_msg.edit_text(f"Произошла ошибка, обратитесь к разработчику(не обязательно): {str(e)} \nЕсли ошибка повторилась попробуйте /clear")
-# ...existing code...

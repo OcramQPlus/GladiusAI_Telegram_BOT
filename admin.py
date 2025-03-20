@@ -18,7 +18,7 @@ admin_router = Router()
 mistral_model = "mistral-large-latest"
 gemini_model = "gemini-2.0-flash"
 GladiusAI_status = True
-ai_right_now = "mistralaiclient"
+ai_right_now = "mistral_ai_client"
 default_prompts = prompts.physical_prompt
 
 def now_time():
@@ -71,14 +71,14 @@ async def ai_choose(callback: types.CallbackQuery):
 @admin_router.callback_query(F.data == "mistralai")
 async def mistralai(callback: types.CallbackQuery):
     global ai_right_now
-    ai_right_now = "mistralaiclient"
+    ai_right_now = "mistral_ai_client"
     await callback.message.edit_text("Выбран MistralAI 🌪",reply_markup=admin_menu.as_markup())
     await callback.answer()
     
 @admin_router.callback_query(F.data == "geminiai")
 async def geminiai(callback: types.CallbackQuery):
     global ai_right_now
-    ai_right_now = "geminiaiclient"
+    ai_right_now = "gemini_ai_client"
     await callback.message.edit_text("Выбран GeminiAI 🌌",reply_markup=admin_menu.as_markup())
     await callback.answer()
 
@@ -136,14 +136,18 @@ async def del_admin_menu(callback: types.CallbackQuery):
 
 @admin_router.callback_query(F.data == "model_selection_admin")
 async def model_selection_admin(callback: types.CallbackQuery):
-    model_selection = InlineKeyboardBuilder()
-    model_selection.row (types.InlineKeyboardButton(text="pixtral-large-latest", callback_data="pixtral_large_latest"),)
-    model_selection.row (types.InlineKeyboardButton(text="ministral-8b-latest", callback_data="ministral_8b_latest"),)
-    model_selection.row (types.InlineKeyboardButton(text="mistral-large-latest", callback_data="mistral-large-latest"),)
-    model_selection.row (types.InlineKeyboardButton(text="ministral-3b-latest", callback_data="ministral_3b_latest"),)
-    model_selection.row (types.InlineKeyboardButton(text="pixtral-12b-2409", callback_data="pixtral_12b_2409"),)
-    model_selection.row (types.InlineKeyboardButton(text="Назад ↩", callback_data="back_to_admin_menu"),)
-    await callback.message.edit_text("Выберите языковую модель:", reply_markup=model_selection.as_markup())
+    global ai_right_now
+    if ai_right_now == "mistral_ai_client":
+        model_selection = InlineKeyboardBuilder()
+        model_selection.row (types.InlineKeyboardButton(text="pixtral-large-latest", callback_data="pixtral_large_latest"),)
+        model_selection.row (types.InlineKeyboardButton(text="ministral-8b-latest", callback_data="ministral_8b_latest"),)
+        model_selection.row (types.InlineKeyboardButton(text="mistral-large-latest", callback_data="mistral-large-latest"),)
+        model_selection.row (types.InlineKeyboardButton(text="ministral-3b-latest", callback_data="ministral_3b_latest"),)
+        model_selection.row (types.InlineKeyboardButton(text="pixtral-12b-2409", callback_data="pixtral_12b_2409"),)
+        model_selection.row (types.InlineKeyboardButton(text="Назад ↩", callback_data="back_to_admin_menu"),)
+        await callback.message.edit_text("Выберите языковую модель:", reply_markup=model_selection.as_markup())
+    if ai_right_now == "gemini_ai_client":
+        await callback.message.edit_text("В разработке", reply_markup=admin_menu.as_markup())
 @admin_router.callback_query(F.data == "pixtral_large_latest")
 async def pixtral_large_latest(callback: types.CallbackQuery):
     global model
