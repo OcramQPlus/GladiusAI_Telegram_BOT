@@ -1,17 +1,17 @@
+# Description: Файл с общими функциями для бота
+# Импорт библиотек
 from random import choice
 import time
-
-
-
+# Переменные
 last_request_time = {}
 RATE_LIMIT = 2
-
+# Текущее время 
 def now_time():
     curent_time = time.time()
     local_time = time.localtime(curent_time)
     format_time = time.strftime("[%D %H:%M:%S]", local_time)
     return format_time
-
+# Генератор сообщения ожидания
 def waiting_response_generator():
     waiting_responses = [
         "Подожди немного, готовим ответ 🤗",
@@ -44,4 +44,3 @@ def waiting_response_generator():
         "Скоро будет ошибка! 💥 (нет)"
     ]
     return choice(waiting_responses)
-

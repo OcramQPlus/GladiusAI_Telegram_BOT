@@ -1,21 +1,20 @@
-
+# Description: Выбор стиля ответа
+# Импорт библиотек и файлов
 from config import conversations
 from aiogram import types, Router, F
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters import Command
-
 from logs.logs import logs
 import time
-
+# Создание роутера
+styles = Router()
+# Текущее время
 def now_time():
     curent_time = time.time()
     local_time = time.localtime(curent_time)
     format_time = time.strftime("[%D %H:%M:%S]", local_time)
     return format_time
-
-
-styles = Router()
-
+# Команда /style
 @styles.message(Command(("style")))
 async def send_style(message: types.Message):
     global style_choose
@@ -29,12 +28,11 @@ async def send_style(message: types.Message):
     user_name = message.from_user.username or "Unknown User"
     print (f"{now_time()} -> /style ->   {user_name} ({user_id}):")
     logs (user_id, user_name, f"{now_time()} -> /style ->   {user_name} ({user_id}):")
-    
+# Удаление сообщения
 @styles.callback_query(F.data == "del_style_message")
 async def del_style_message(callback: types.CallbackQuery):
     await callback.message.delete()
-    
-    
+# Выбор стиля
 @styles.callback_query(F.data == "shortly")
 async def shortly(callback: types.CallbackQuery):
     user_id = callback.from_user.id
@@ -43,7 +41,6 @@ async def shortly(callback: types.CallbackQuery):
     conversations[user_id].append({"role": "user", "content": "Твое имя Gladius.Ты должен отвечать максимально кратко на сколько это возможно и по делу, не задавай вопросов."})
     await callback.message.edit_text("Стиль ответа изменён, ответы будут более короткими 🤐", reply_markup=style_choose.as_markup())
 
-
 @styles.callback_query(F.data == "expanded")
 async def expanded(callback: types.CallbackQuery):
     user_id = callback.from_user.id
@@ -51,9 +48,6 @@ async def expanded(callback: types.CallbackQuery):
         conversations[user_id] = []
     conversations[user_id].append({"role": "user", "content": "Твое имя Gladius.Ты должен отвечать максимально развернуто и творчески."})
     await callback.message.edit_text("Стиль ответа изменён, ответы будут более развёрнутыми 🤩", reply_markup=style_choose.as_markup())
-
-
-
 @styles.callback_query(F.data == "no_style")
 async def no_style(callback: types.CallbackQuery):
     user_id = callback.from_user.id
