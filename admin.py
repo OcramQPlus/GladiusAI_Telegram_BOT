@@ -80,6 +80,7 @@ async def mistralai(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["ai_right_now"] = "mistral_ai_client"
     await callback.message.edit_text("Выбран MistralAI 🌪", reply_markup=create_admin_menu().as_markup())
+    conversations[user_id] = []
     await callback.answer()
 # Выбор GeminiAI
 @admin_router.callback_query(F.data == "geminiai")
@@ -88,6 +89,7 @@ async def geminiai(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["ai_right_now"] = "gemini_ai_client"
     await callback.message.edit_text("Выбран GeminiAI 🌌", reply_markup=create_admin_menu().as_markup())
+    conversations[user_id] = []
     await callback.answer()
 # Включение и выключение бота
 @admin_router.callback_query(F.data == "on_off")
@@ -271,6 +273,7 @@ async def girl(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.girl_prompt
     await callback.message.edit_text("Ответы будут в стиле девочки🎀", reply_markup=create_admin_menu().as_markup())
+    conversations[user_id] = []
     await callback.answer()
 # Выбор стиля мальчика
 @admin_router.callback_query(F.data == "boy")
@@ -279,6 +282,7 @@ async def boy(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.boy_prompt
     await callback.message.edit_text("Ответы будут в стиле мальчика🏋️‍♀️", reply_markup=create_admin_menu().as_markup())
+    conversations[user_id] = []
     await callback.answer()
 # Выбор стиля злодея
 @admin_router.callback_query(F.data == "villain")
@@ -287,6 +291,7 @@ async def villain(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.villain_prompt
     await callback.message.edit_text("Ответы будут в стиле злодея😈", reply_markup=create_admin_menu().as_markup())
+    conversations[user_id] = []
     await callback.answer()
 # Выбор стандартного стиля
 @admin_router.callback_query(F.data == "standart")
@@ -295,6 +300,7 @@ async def standart(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.standart_prompt
     await callback.message.edit_text("Ответы будут в обычном стиле🤖", reply_markup=create_admin_menu().as_markup())
+    conversations[user_id] = []
     await callback.answer()
 # Выбор стиля профессора физики
 @admin_router.callback_query(F.data == "physical")
@@ -303,6 +309,7 @@ async def physical(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.physical_prompt
     await callback.message.edit_text("Ответы будут в стиле профессора физики👨‍🏫", reply_markup=create_admin_menu().as_markup())
+    conversations[user_id] = []
     await callback.answer()
 # Выбор случайного стиля
 @admin_router.callback_query(F.data == "random")
@@ -311,4 +318,5 @@ async def random(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.random_prompt
     await callback.message.edit_text("Ответы будут в случайном стиле🎰", reply_markup=create_admin_menu().as_markup())
+    conversations[user_id] = []
     await callback.answer()

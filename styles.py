@@ -6,6 +6,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters import Command
 from logs.logs import logs
 import time
+import admin
 # Создание роутера
 styles = Router()
 # Текущее время
@@ -36,22 +37,24 @@ async def del_style_message(callback: types.CallbackQuery):
 @styles.callback_query(F.data == "shortly")
 async def shortly(callback: types.CallbackQuery):
     user_id = callback.from_user.id
-    if user_id not in conversations:
-        conversations[user_id] = []
-    conversations[user_id].append({"role": "user", "content": "Твое имя Gladius.Ты должен отвечать максимально кратко на сколько это возможно и по делу, не задавай вопросов."})
+    config = admin.get_user_config(user_id)
+    base_prompts = config["default_prompts"]
+    style_prompts = "Отвечай кратко и по делу"
+    config["default_prompts"] = f"{base_prompts}{style_prompts}"
     await callback.message.edit_text("Стиль ответа изменён, ответы будут более короткими 🤐", reply_markup=style_choose.as_markup())
-
 @styles.callback_query(F.data == "expanded")
 async def expanded(callback: types.CallbackQuery):
     user_id = callback.from_user.id
-    if user_id not in conversations:
-        conversations[user_id] = []
-    conversations[user_id].append({"role": "user", "content": "Твое имя Gladius.Ты должен отвечать максимально развернуто и творчески."})
+    config = admin.get_user_config(user_id)
+    base_prompts = config["default_prompts"]
+    style_prompts = "Ты должен отвечать максимально развернуто и творчески."
+    config["default_prompts"] = f"{base_prompts}{style_prompts}"
     await callback.message.edit_text("Стиль ответа изменён, ответы будут более развёрнутыми 🤩", reply_markup=style_choose.as_markup())
 @styles.callback_query(F.data == "no_style")
 async def no_style(callback: types.CallbackQuery):
     user_id = callback.from_user.id
-    if user_id not in conversations:
-        conversations[user_id] = []
-    conversations[user_id].append({"role": "user", "content": "Твое имя Gladius. Отвечай обычным размером текста(символов)"})
+    config = admin.get_user_config(user_id)
+    base_prompts = config["default_prompts"]
+    style_prompts = "Отвечай обычным размером текста(символов), однако продолжая использовать смайлы."
+    config["default_prompts"] = f"{base_prompts}{style_prompts}"
     await callback.message.edit_text("Стиль ответа изменён, ответы будут обычными 🙂", reply_markup=style_choose.as_markup())

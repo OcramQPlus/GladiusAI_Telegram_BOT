@@ -37,12 +37,10 @@ async def gemini_answer(message: types.Message):
         print(f"{now_time()} -> Сообщение ожидания для ->   {user_name} ({user_id}):", waiting_response_generator_result)
         logs(user_id, user_name, f"{now_time()} -> Сообщение ожидания для -> {user_name} ({user_id}): {waiting_response_generator_result}")
         # Создание чата и получение ответа ответа от API
-        if user_id not in conversations:
-            conversations[user_id] = gemini_client.chats.create(model=config["gemini_model"], 
-            config = genai_types.GenerateContentConfig(system_instruction= config["default_prompts"]) )
-        elif isinstance(conversations[user_id], list):
-            conversations[user_id] = gemini_client.chats.create(model=config["gemini_model"],
-            config = genai_types.GenerateContentConfig(system_instruction= config["default_prompts"]))
+        if user_id not in conversations or isinstance(conversations[user_id], list):
+            conversations[user_id] = gemini_client.chats.create(
+                model=config["gemini_model"],
+                config=genai_types.GenerateContentConfig(system_instruction=config["default_prompts"])) 
         response = conversations[user_id].send_message(message.text)
         response_text = response.text
         # Вывод ответа и модели

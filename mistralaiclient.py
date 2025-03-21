@@ -42,7 +42,7 @@ async def mistral_answer(message: types.Message):
             conversations[user_id] = [{"role": "system", "content": config["default_prompts"]}]
         conversations[user_id].append({"role": "user", "content": message.text})
         # Ограничение длины истории сообщений
-        if len(conversations[user_id]) > 1000:
+        if len(conversations[user_id]) > 100:
             conversations[user_id] = [{"role": "system", "content": config["default_prompts"]}] + conversations[user_id][-9:]
         # Отправка сообщения и получение ответа
         response_text = ""
