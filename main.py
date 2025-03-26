@@ -7,6 +7,10 @@ import styles
 import user_message
 import commands
 import feedback
+#UTF-8
+import sys
+sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='UTF-8', buffering=1)
+sys.stderr = open(sys.stderr.fileno(), mode='w', encoding='UTF-8', buffering=1)
 # Основная функция
 async def main():
     GladiusAI.include_router(commands.commands)
