@@ -106,6 +106,8 @@ async def on(callback: types.CallbackQuery):
     global GladiusAI_status
     GladiusAI_status = True
     await callback.message.edit_text("Включено 💡", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> bot_on ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> bot_on ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 # Выключение бота
 @admin_router.callback_query(F.data == "off")
@@ -113,6 +115,8 @@ async def off(callback: types.CallbackQuery):
     global GladiusAI_status
     GladiusAI_status = False
     await callback.message.edit_text("Выключено 🔌", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> bot_off ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> bot_off ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 # Возврат в меню администратора
 @admin_router.callback_query(F.data == "back_to_admin_menu")
@@ -135,6 +139,8 @@ async def debug_on(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["debug_mode"] = True
     await callback.message.edit_text("Отладка включена 🧰", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> debug_on ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> debug_on ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 # Выключение отладки
 @admin_router.callback_query(F.data == "debug_off")
@@ -143,6 +149,8 @@ async def debug_off(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["debug_mode"] = False
     await callback.message.edit_text("Отладка выключена ⚰", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> debug_off ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> debug_off ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 # Удаление меню администратора
 @admin_router.callback_query(F.data == "del_admin_menu")
@@ -155,6 +163,8 @@ async def model_selection_admin(callback: types.CallbackQuery):
     user_id = callback.from_user.id
     config = get_user_config(user_id)
     model_selection = InlineKeyboardBuilder()
+    print(f"{now_time()} -> model_selection_admin ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> model_selection_admin ->   {callback.from_user.username} ({callback.from_user.id}):")
     # Выбор языковой модели для MistralAI
     if config["ai_right_now"] == "mistral_ai_client":
         model_selection.row(types.InlineKeyboardButton(text="pixtral-large-latest", callback_data="pixtral_large_latest"))
@@ -181,6 +191,9 @@ async def gemini_2_0_flash(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["gemini_model"] = "gemini-2.0-flash"
     await callback.message.edit_text("Выбранная модель: gemini-2.0-flash", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 @admin_router.callback_query(F.data == "gemini_2.0_flash_lite")
 async def gemini_2_0_flash_lite(callback: types.CallbackQuery):
@@ -188,6 +201,9 @@ async def gemini_2_0_flash_lite(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["gemini_model"] = "gemini-2.0-flash-lite"
     await callback.message.edit_text("Выбранная модель: gemini-2.0-flash-lite", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 @admin_router.callback_query(F.data == "gemini_2.0_pro_exp_02_05")
 async def gemini_2_0_pro_exp_02_05(callback: types.CallbackQuery):
@@ -195,6 +211,9 @@ async def gemini_2_0_pro_exp_02_05(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["gemini_model"] = "gemini-2.0-pro-exp-02-05"
     await callback.message.edit_text("Выбранная модель: gemini-2.0-pro-exp-02-05", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 @admin_router.callback_query(F.data == "gemini_1.5_flash")
 async def gemini_1_5_flash(callback: types.CallbackQuery):
@@ -202,6 +221,9 @@ async def gemini_1_5_flash(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["gemini_model"] = "gemini-1.5-flash"
     await callback.message.edit_text("Выбранная модель: gemini-1.5-flash", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 @admin_router.callback_query(F.data == "gemini_1.5_flash_8b")
 async def gemini_1_5_flash_8b(callback: types.CallbackQuery):
@@ -209,6 +231,9 @@ async def gemini_1_5_flash_8b(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["gemini_model"] = "gemini-1.5-flash-8b"
     await callback.message.edit_text("Выбранная модель: gemini-1.5-flash-8b", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 @admin_router.callback_query(F.data == "gemini_1.5_pro")
 async def gemini_1_5_pro(callback: types.CallbackQuery):
@@ -216,6 +241,9 @@ async def gemini_1_5_pro(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["gemini_model"] = "gemini-1.5-pro"
     await callback.message.edit_text("Выбранная модель: gemini-1.5-pro", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['gemini_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 # Выбор языковой модели для MistralAI
 @admin_router.callback_query(F.data == "pixtral_large_latest")
@@ -224,6 +252,9 @@ async def pixtral_large_latest(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["mistral_model"] = "pixtral-large-latest"
     await callback.message.edit_text("Выбранная модель: pixtral-large-latest", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 @admin_router.callback_query(F.data == "ministral_8b_latest")
 async def ministral_8b_latest(callback: types.CallbackQuery):
@@ -231,6 +262,9 @@ async def ministral_8b_latest(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["mistral_model"] = "ministral-8b-latest"
     await callback.message.edit_text("Выбранная модель: ministral-8b-latest", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 @admin_router.callback_query(F.data == "mistral-large-latest")
 async def mistral_large_latest(callback: types.CallbackQuery):
@@ -238,6 +272,9 @@ async def mistral_large_latest(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["mistral_model"] = "mistral-large-latest"
     await callback.message.edit_text("Выбранная модель: mistral-large-latest", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 @admin_router.callback_query(F.data == "ministral_3b_latest")
 async def ministral_3b_latest(callback: types.CallbackQuery):
@@ -245,6 +282,9 @@ async def ministral_3b_latest(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["mistral_model"] = "ministral-3b-latest"
     await callback.message.edit_text("Выбранная модель: ministral-3b-latest", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 @admin_router.callback_query(F.data == "pixtral_12b_2409")
 async def pixtral_12b_2409(callback: types.CallbackQuery):
@@ -252,6 +292,9 @@ async def pixtral_12b_2409(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["mistral_model"] = "pixtral-12b-2409"
     await callback.message.edit_text("Выбранная модель: pixtral-12b-2409", reply_markup=create_admin_menu().as_markup())
+    config = get_user_config(callback.from_user.id)
+    print(f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> {config['mistral_model']} ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 # Выбор персонажа
 @admin_router.callback_query(F.data == "promt_choose_admin")
@@ -273,6 +316,8 @@ async def girl(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.girl_prompt
     await callback.message.edit_text("Ответы будут в стиле девочки🎀", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[user_id] = []
     await callback.answer()
 # Выбор стиля мальчика
@@ -282,6 +327,8 @@ async def boy(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.boy_prompt
     await callback.message.edit_text("Ответы будут в стиле мальчика🏋️‍♀️", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[user_id] = []
     await callback.answer()
 # Выбор стиля злодея
@@ -291,6 +338,8 @@ async def villain(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.villain_prompt
     await callback.message.edit_text("Ответы будут в стиле злодея😈", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[user_id] = []
     await callback.answer()
 # Выбор стандартного стиля
@@ -300,6 +349,8 @@ async def standart(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.standart_prompt
     await callback.message.edit_text("Ответы будут в обычном стиле🤖", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[user_id] = []
     await callback.answer()
 # Выбор стиля профессора физики
@@ -309,6 +360,8 @@ async def physical(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.physical_prompt
     await callback.message.edit_text("Ответы будут в стиле профессора физики👨‍🏫", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[user_id] = []
     await callback.answer()
 # Выбор случайного стиля
@@ -318,5 +371,7 @@ async def random(callback: types.CallbackQuery):
     config = get_user_config(user_id)
     config["default_prompts"] = prompts.random_prompt
     await callback.message.edit_text("Ответы будут в случайном стиле🎰", reply_markup=create_admin_menu().as_markup())
+    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[user_id] = []
     await callback.answer()
