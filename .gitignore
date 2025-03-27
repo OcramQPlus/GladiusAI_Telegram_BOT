@@ -4,6 +4,8 @@ gemini.py
 __pycache__/
 *.pyc
 
+FORPROJECT.py
+
 
 logs
 !logs/
