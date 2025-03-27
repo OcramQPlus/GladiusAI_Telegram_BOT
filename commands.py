@@ -25,7 +25,7 @@ async def send_welcome(message: types.Message):
     # Приветствие пользователя
     user_name_for_start = message.from_user.first_name or ""
     await message.reply(f"""
-Привет {user_name_for_start}! Я - Профессор физики Gladius👨‍🎓, помогу тебе с любыми вопросами по физике.
+Привет {user_name_for_start}! Я - Профессор Gladius👨‍🎓, помогу тебе с любыми вопросами по физике.
 Что бы узнать больше информации о боте, напиши /help    
                         """)
     print(f"{now_time()} -> /start ->   {user_name} ({user_id}):")
@@ -44,7 +44,7 @@ async def clear_history(message: types.Message):
 @commands.message(F.text, Command(("help")))
 async def send_help(message: types.Message):
     await message.answer("""
-Наши команды:
+Мои команды:
     /start - Начать диалог с ботом
     /clear - Очистить историю сообщений
     /help - Помощь и информация по боту
