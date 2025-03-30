@@ -6,6 +6,8 @@ from aiogram.enums import ParseMode
 from config import conversations
 import time
 from logs.logs import logs
+import admin
+import prompts
 # Создание роутера
 commands = Router()
 # Функция для получения текущего времени
@@ -40,6 +42,20 @@ async def clear_history(message: types.Message):
     await message.reply("Память стёрта😓")
     print(f"{now_time()} -> /clear ->   {user_name} ({user_id}):")
     logs (user_id, user_name, f"{now_time()} -> /clear -> {user_name} ({user_id}):")
+#Очистка/Сброс настроек пользователя
+@commands.message(Command(("clear_settings")))
+async def clear_settings(message: types.Message):
+    user_id = message.from_user.id
+    config = admin.get_user_config(message.from_user.id)
+    config["ai_right_now"] = "mistral_ai_client"
+    config["default_prompts"] = prompts.physical_prompt
+    config["mistral_model"] = "mistral-large-latest"
+    config["gemini_model"] = "gemini-2.0-flash"
+    config["debug_mode"] = False
+    conversations[user_id] = []
+    await message.reply("Настройки сброшены😓")
+    print(f"{now_time()} -> /clear_settings ->   {message.from_user.username or 'Unknown User'} ({user_id}):")
+    logs (user_id, message.from_user.username or 'Unknown User', f"{now_time()} -> /clear_settings -> {message.from_user.username or 'Unknown User'} ({user_id}):")
 # Команда /help
 @commands.message(F.text, Command(("help")))
 async def send_help(message: types.Message):
@@ -48,7 +64,7 @@ async def send_help(message: types.Message):
     /start - Начать диалог с ботом
     /clear - Очистить историю сообщений
     /help - Помощь и информация по боту
-    /style - Изменить стиль сообщений
+    /clear_settings - Очисть настройки
     /admin - Панель администратора
     /feedback - Оставить отзыв или идею
 На основе: <b>Mistral Ai</b>

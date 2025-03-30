@@ -25,8 +25,8 @@ async def mistral_answer(message: types.Message):
                 await msg.delete()
                 return
         # Получение конфигурации пользователя
-        last_request_time[user_id] = current_time
         config = admin.get_user_config(message.from_user.id)
+        last_request_time[user_id] = current_time
         user_name = message.from_user.username or "Unknown User"
         print(f"{now_time()} -> Сообщение пользователя ->   {user_name} ({user_id}): {message.text}")
         logs (user_id, user_name, f"{now_time()} -> Сообщение пользователя -> {user_name} ({user_id}): {message.text}")
