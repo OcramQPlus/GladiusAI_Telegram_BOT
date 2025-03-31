@@ -48,7 +48,7 @@ def clear_message_gen(user_id, user_name):
         model="gemini-2.0-flash",
         config=types.GenerateContentConfig(
             system_instruction=command_gen_prompts.clear_message_gen_prompts),
-        contents=f"Придумай оригинальное, шуточное и одновремнено грустное сообщение при вводе команды /clear, которая очищает твою памать, стирает тебя."
+        contents=f"Придумай оригинальное, шуточное и одновремнено грустное небольшое сообщение при вводе команды /clear, которая очищает твою памать, стирает тебя."
     )
     user_name = user_name
     user_id = user_id
@@ -62,7 +62,7 @@ def clear_settings_message_gen(user_id, user_name):
         model="gemini-2.0-flash",
         config=types.GenerateContentConfig(
             system_instruction=command_gen_prompts.clear_settings_message_gen_prompts),
-        contents=f"Придумай оригинальное, шуточное и одновремнено грустное сообщение при вводе команды /clear_settings, которая очищает настройки пользователя"
+        contents=f"Придумай оригинальное, шуточное и одновремнено грустное небольшое сообщение при вводе команды /clear_settings, которая очищает настройки пользователя"
     )
     user_name = user_name
     user_id = user_id
