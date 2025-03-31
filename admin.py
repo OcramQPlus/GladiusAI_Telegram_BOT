@@ -79,6 +79,7 @@ async def mistralai(callback: types.CallbackQuery):
     config = get_user_config(callback.from_user.id)
     config["ai_right_now"] = "mistral_ai_client"
     await callback.message.edit_text("Выбран MistralAI 🌪", reply_markup=create_admin_menu().as_markup())
+    user_id = callback.from_user.id
     conversations[user_id] = []
     await callback.answer()
 # Выбор GeminiAI
@@ -87,6 +88,7 @@ async def geminiai(callback: types.CallbackQuery):
     config = get_user_config(callback.from_user.id)
     config["ai_right_now"] = "gemini_ai_client"
     await callback.message.edit_text("Выбран GeminiAI 🌌", reply_markup=create_admin_menu().as_markup())
+    user_id = callback.from_user.id
     conversations[user_id] = []
     await callback.answer()
 # Включение и выключение бота
