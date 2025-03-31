@@ -6,8 +6,8 @@ from aiogram.enums import ParseMode
 from config  import conversations, mistral_client
 import admin
 import time
-from logs.logs import logs
 from forai import last_request_time, RATE_LIMIT, now_time, waiting_response_generator
+from logs.logs import logs
 # Обработка сообщений от пользователя и отправка ответа
 async def mistral_answer(message: types.Message):
     try:
@@ -25,8 +25,8 @@ async def mistral_answer(message: types.Message):
                 await msg.delete()
                 return
         # Получение конфигурации пользователя
-        last_request_time[user_id] = current_time
         config = admin.get_user_config(message.from_user.id)
+        last_request_time[user_id] = current_time
         user_name = message.from_user.username or "Unknown User"
         print(f"{now_time()} -> Сообщение пользователя ->   {user_name} ({user_id}): {message.text}")
         logs (user_id, user_name, f"{now_time()} -> Сообщение пользователя -> {user_name} ({user_id}): {message.text}")
@@ -65,9 +65,9 @@ async def mistral_answer(message: types.Message):
             await waiting_msg.edit_text(response_text)
     # Обработка ошибок
     except Exception as e:
+        await waiting_msg.edit_text(f"Произошла ошибка, обратитесь к разработчику(не обязательно): {str(e)} \nЕсли ошибка повторилась попробуйте /clear")
         print(f"{now_time()} -> [Error]: {str(e)}")
         logs (user_id, user_name, f"{now_time()} -> [Error]: {str(e)}")
-        await waiting_msg.edit_text(f"Произошла ошибка, обратитесь к разработчику(не обязательно): {str(e)} \nЕсли ошибка повторилась попробуйте /clear")
         
         
         
