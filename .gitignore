@@ -5,6 +5,7 @@ __pycache__/
 *.pyc
 
 FORPROJECT.py
+command_gen_prompts.py
 
 
 logs

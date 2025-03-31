@@ -1,0 +1,4 @@
+start_message_gen_prompts = """Ваш промт"""
+help_message_gen_prompts = """Ваш промт"""
+clear_message_gen_prompts = """Ваш промт"""
+clear_settings_message_gen_prompts = """Ваш промт"""
