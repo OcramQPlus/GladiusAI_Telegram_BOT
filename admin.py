@@ -81,6 +81,8 @@ async def mistralai(callback: types.CallbackQuery):
     await callback.message.edit_text("Выбран MistralAI 🌪", reply_markup=create_admin_menu().as_markup())
     user_id = callback.from_user.id
     conversations[user_id] = []
+    print(f"{now_time()} -> MistralAI ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> bot_off ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 # Выбор GeminiAI
 @admin_router.callback_query(F.data == "geminiai")
@@ -90,6 +92,8 @@ async def geminiai(callback: types.CallbackQuery):
     await callback.message.edit_text("Выбран GeminiAI 🌌", reply_markup=create_admin_menu().as_markup())
     user_id = callback.from_user.id
     conversations[user_id] = []
+    print(f"{now_time()} -> GeminiAi ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> bot_off ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 # Включение и выключение бота
 @admin_router.callback_query(F.data == "on_off")
@@ -300,8 +304,8 @@ async def boy(callback: types.CallbackQuery):
     config = get_user_config(callback.from_user.id)
     config["default_prompts"] = prompts.boy_prompt
     await callback.message.edit_text("Ответы будут в стиле мальчика🏋️‍♀️", reply_markup=create_admin_menu().as_markup())
-    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
-    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    print(f"{now_time()} -> Boy ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Boy ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[callback.from_user.id] = []
     await callback.answer()
 # Выбор стиля злодея
@@ -310,8 +314,8 @@ async def villain(callback: types.CallbackQuery):
     config = get_user_config(callback.from_user.id)
     config["default_prompts"] = prompts.villain_prompt
     await callback.message.edit_text("Ответы будут в стиле злодея😈", reply_markup=create_admin_menu().as_markup())
-    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
-    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    print(f"{now_time()} -> Villain ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Villain ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[callback.from_user.id] = []
     await callback.answer()
 # Выбор стандартного стиля
@@ -320,8 +324,8 @@ async def standart(callback: types.CallbackQuery):
     config = get_user_config(callback.from_user.id)
     config["default_prompts"] = prompts.standart_prompt
     await callback.message.edit_text("Ответы будут в обычном стиле🤖", reply_markup=create_admin_menu().as_markup())
-    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
-    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    print(f"{now_time()} -> Standart ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Standart ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[callback.from_user.id] = []
     await callback.answer()
 # Выбор стиля профессора физики
@@ -330,8 +334,8 @@ async def physical(callback: types.CallbackQuery):
     config = get_user_config(callback.from_user.id)
     config["default_prompts"] = prompts.physical_prompt
     await callback.message.edit_text("Ответы будут в стиле профессора физики👨‍🏫", reply_markup=create_admin_menu().as_markup())
-    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
-    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    print(f"{now_time()} -> Physical ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Physical ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[callback.from_user.id] = []
     await callback.answer()
 # Выбор случайного стиля
@@ -340,7 +344,7 @@ async def random(callback: types.CallbackQuery):
     config = get_user_config(callback.from_user.id)
     config["default_prompts"] = prompts.random_prompt
     await callback.message.edit_text("Ответы будут в случайном стиле🎰", reply_markup=create_admin_menu().as_markup())
-    print(f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
-    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Girl ->   {callback.from_user.username} ({callback.from_user.id}):")
+    print(f"{now_time()} -> Random ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> Random ->   {callback.from_user.username} ({callback.from_user.id}):")
     conversations[callback.from_user.id] = []
     await callback.answer()
