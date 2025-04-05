@@ -36,11 +36,12 @@ def feedback(feedback_type, user_id, user_name, feedback_message):
 async def feedback_message(message: types.Message):
     user_name_for_start = message.from_user.username or ""
     user_id = message.from_user.id
+    user_name = message.from_user.username or "Unknown User"
     feedback_menu = InlineKeyboardBuilder()
     feedback_menu.row (types.InlineKeyboardButton(text="Положительный 👍", callback_data="good_feedback"),)
     feedback_menu.row (types.InlineKeyboardButton(text="Отрицательный 👎", callback_data="bad_feedback"),)
     feedback_menu.row (types.InlineKeyboardButton(text="Идея 💡", callback_data="idea_feedback"),)
-    await message.reply(f"{command_gen.feedback_start_message_gen(user_name_for_start,user_id)}", reply_markup=feedback_menu.as_markup())
+    await message.reply(f"{command_gen.feedback_start_message_gen(user_name_for_start,user_id,user_name)}", reply_markup=feedback_menu.as_markup())
     print(f"{now_time()} -> /feedback ->   {message.from_user.username} ({message.from_user.id}):")
     logs (message.from_user.id, message.from_user.username, f"{now_time()} -> /feedback -> {message.from_user.username} ({message.from_user.id}):")
 # Обработчики кнопок
@@ -91,5 +92,5 @@ async def feedback_message_write(message: types.Message):
     feedback_type = feedback_get[user_id]
     feedback_message = message.text
     feedback(feedback_type, user_id, user_name, f"{now_time()} -> {feedback_type} -> {feedback_message}")
-    await message.reply(f"{command_gen.feedback_end_message_gen(user_name_for_start, feedback_type, feedback_message, user_id)}")
+    await message.reply(f"{command_gen.feedback_end_message_gen(user_name_for_start, feedback_type, feedback_message, user_id,user_name)}")
     del feedback_get[user_id]

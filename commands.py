@@ -26,7 +26,7 @@ async def send_welcome(message: types.Message):
     user_name = message.from_user.username or "Unknown User"
     conversations[user_id] = []
     # Приветствие пользователя
-    await message.reply(f"{command_gen.start_message_gen(message.from_user.first_name or "Его нет",user_id)}")
+    await message.reply(f"{command_gen.start_message_gen(message.from_user.first_name or "Его нет",user_id, user_name)}")
     print(f"{now_time()} -> /start ->   {user_name} ({user_id}):")
     logs (user_id, user_name, f"{now_time()} -> /start -> {user_name} ({user_id}):")
 # Команда /clear
@@ -59,7 +59,7 @@ async def clear_settings(message: types.Message):
 async def send_help(message: types.Message):
     user_id = message.from_user.id
     user_name = message.from_user.username or "Unknown User"
-    await message.answer(f"{command_gen.help_message_gen(message.from_user.first_name or "Его нет",user_id)}")
+    await message.answer(f"{command_gen.help_message_gen(message.from_user.first_name or "Его нет",user_id,user_name)}")
     print(f"{now_time()} -> /help ->   {user_name} ({user_id}):")
     logs (user_id, user_name, f"{now_time()} -> /help -> {user_name} ({user_id}):")
     
