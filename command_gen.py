@@ -88,13 +88,23 @@ def feedback_end_message_gen(user_name_for_start,feedback_type,feedback_message,
     print(f"{now_time()} -> Сообщение ИИ для->   {user_name} ({user_id}): {response.text}")
     logs(user_id, user_name, f"{now_time()} -> Сообщение ИИ для-> {user_name} ({user_id}): {response.text}")
     return response.text
-def user_access_list_gen(user_id, user_name):
+def user_access_list_gen(user_name_for_start, user_id, user_name):
     client = gemini_client
     response = client.models.generate_content(
         model="gemini-2.0-flash",
         config=types.GenerateContentConfig(
             system_instruction=command_gen_prompts.user_access_list_gen_prompts),
-        contents=f"Полуьзовтель не получил ответа, сообщи ему почему, имя пользователя {user_name}.")
+        contents=f"Полуьзовтель не получил ответа, сообщи ему почему, имя пользователя {user_name_for_start}.")
+    print(f"{now_time()} -> Сообщение ИИ для->   {user_name} ({user_id}): {response.text}")
+    logs(user_id, user_name, f"{now_time()} -> Сообщение ИИ для-> {user_name} ({user_id}): {response.text}")
+    return response.text
+def error_message_gen(user_name_for_start, user_id, user_name):
+    client = gemini_client
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        config=types.GenerateContentConfig(
+            system_instruction=command_gen_prompts.error_message_gen_prompts),
+        contents=f"Пользователь получил ошибку. Имя пользователя:  {user_name_for_start}.")
     print(f"{now_time()} -> Сообщение ИИ для->   {user_name} ({user_id}): {response.text}")
     logs(user_id, user_name, f"{now_time()} -> Сообщение ИИ для-> {user_name} ({user_id}): {response.text}")
     return response.text

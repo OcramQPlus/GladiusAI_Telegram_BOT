@@ -8,6 +8,7 @@ import admin
 import time
 from forai import last_request_time, RATE_LIMIT, now_time, waiting_response_generator
 from logs.logs import logs
+import command_gen
 # Обработка сообщений от пользователя и отправка ответа
 async def mistral_answer(message: types.Message):
     try:
@@ -65,9 +66,16 @@ async def mistral_answer(message: types.Message):
             await waiting_msg.edit_text(response_text)
     # Обработка ошибок
     except Exception as e:
-        await waiting_msg.edit_text(f"Произошла ошибка, обратитесь к разработчику(не обязательно): {str(e)} \nЕсли ошибка повторилась попробуйте /clear")
         print(f"{now_time()} -> [Error]: {str(e)}")
         logs (user_id, user_name, f"{now_time()} -> [Error]: {str(e)}")
+        user_name = message.from_user.username or "Unknown User"
+        user_id = message.from_user.id
+        user_name_for_start = message.from_user.first_name or "Unknown Name"
+        await waiting_msg.edit_text(f"{command_gen.error_message_gen(user_name_for_start, user_id, user_name)}")
+        # Существующий код обработки ошибки
+        if user_id in conversations:
+            conversations[user_id] = []
+
         
         
         
