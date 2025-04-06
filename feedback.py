@@ -58,7 +58,7 @@ async def feedback_message(message: types.Message):
 # У пользователя нет доступа к боту
 @feedback_router.message(Command(("feedback")))
 async def feedback_message(message: types.Message):
-    await message.reply(command_gen.user_access_list_gen(message.from_user.id, message.from_user.username))
+    await message.reply(command_gen.user_access_list_gen(message.from_user.id, message.from_user.username, message.text or "Нет сообщения"))
     print(f"{forai.now_time()} -> Пользователь не получил доступа к боту->   {message.from_user.username} ({message.from_user.id}): {message.text}")
     logs(message.from_user.id, message.from_user.username, f"{forai.now_time()} -> Пользователь не получил доступа к боту-> {message.from_user.username} ({message.from_user.id}): {message.text}")
 # Обработчики кнопок
