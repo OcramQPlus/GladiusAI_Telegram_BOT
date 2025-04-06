@@ -7,3 +7,4 @@ GladiusAI_Bot = Bot(token='YOUR_TELEGRAM_BOT_TOKEN')
 gemini_client = genai.Client(api_key="YOUR_GEMINI_API_KEY")
 GladiusAI = Dispatcher()
 conversations = {}
+user_access_list = ["User_ID_Telegram"] # type: ignore
