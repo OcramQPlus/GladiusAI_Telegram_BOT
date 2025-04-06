@@ -23,7 +23,7 @@ class Access_to_the_bot(BaseFilter):
 @user_message_router.message(Access_to_the_bot(user_access=config.user_access_list),)
 async def user_message_get(message: types.Message):
     #Записываем логи
-    user_name = message.from_user.username
+    user_name = message.from_user.username or "Unknown User"
     user_id = message.from_user.id
     print(f"{forai.now_time()} -> Пользователь получил доступ к боту->   {user_name} ({user_id}): {message.text}")
     logs(user_id, user_name, f"{forai.now_time()} -> Пользователь получил доступ к боту-> {user_name} ({user_id}): {message.text}")
@@ -50,8 +50,9 @@ async def user_message_get(message: types.Message):
 #У пользователя нет доступа к боту
 @user_message_router.message()
 async def user_message_get(message: types.Message):
-    await message.reply(command_gen.user_access_list_gen(message.from_user.id, message.from_user.username))
     user_name = message.from_user.username or "Unknown User"
     user_id = message.from_user.id
+    user_name_for_start = message.from_user.first_name or "Его нет"
+    await message.reply(command_gen.user_access_list_gen(user_name_for_start,user_id, user_name))
     print(f"{forai.now_time()} -> Пользователь не получил доступа к боту->   {user_name} ({user_id}): {message.text}")
     logs(user_id, user_name, f"{forai.now_time()} -> Пользователь не получил доступа к боту-> {user_name} ({user_id}): {message.text}")
