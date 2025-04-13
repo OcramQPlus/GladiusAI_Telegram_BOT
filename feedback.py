@@ -55,6 +55,7 @@ async def feedback_message(message: types.Message):
     print(f"{now_time()} -> /feedback ->   {message.from_user.username} ({message.from_user.id}):")
     logs (message.from_user.id, message.from_user.username, f"{now_time()} -> /feedback -> {message.from_user.username} ({message.from_user.id}):")
     
+    
 # У пользователя нет доступа к боту
 @feedback_router.message(Command(("feedback")))
 async def feedback_message(message: types.Message):

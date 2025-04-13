@@ -47,6 +47,7 @@ async def user_message_get(message: types.Message):
         case "gemini_ai_client":
             await geminiaiclient.gemini_answer(message)
             user_id = message.from_user.id
+            
 #У пользователя нет доступа к боту
 @user_message_router.message()
 async def user_message_get(message: types.Message):

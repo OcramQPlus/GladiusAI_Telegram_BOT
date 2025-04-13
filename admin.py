@@ -23,6 +23,7 @@ def get_user_config(user_id: int):
             "gemini_model": "gemini-2.0-flash",
             "debug_mode": False,
         }
+        
     return user_configs[user_id]
 # Функция для получения текущего времени
 def now_time():

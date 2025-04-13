@@ -12,6 +12,7 @@ def now_time():
     format_time = time.strftime("[%D %H:%M:%S]", local_time)
     return format_time
 # Генератор сообщения ожидания
+
 def waiting_response_generator():
     waiting_responses = [
         "Подожди немного, готовим ответ 🤗",

@@ -66,3 +66,4 @@ async def gemini_answer(message: types.Message):
         # Существующий код обработки ошибки
         if user_id in conversations:
             conversations[user_id] = []
+            

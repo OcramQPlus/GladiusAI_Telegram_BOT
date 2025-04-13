@@ -18,3 +18,5 @@ def logs(user_id, user_name, message):
     with open(log_path, "a", encoding="utf-8") as log_file:
         user_data = f"{user_name} ({user_id}):"
         log_file.write(f"{user_data} {message = }\n")
+        
+        

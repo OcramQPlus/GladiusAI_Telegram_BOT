@@ -30,6 +30,7 @@ async def send_welcome(message: types.Message):
     print(f"{now_time()} -> /start ->   {user_name} ({user_id}):")
     logs (user_id, user_name, f"{now_time()} -> /start -> {user_name} ({user_id}):")
 # Команда /clear
+
 @commands.message(Command(("clear")))
 async def clear_history(message: types.Message):
     user_name = message.from_user.username or "Unknown User"
