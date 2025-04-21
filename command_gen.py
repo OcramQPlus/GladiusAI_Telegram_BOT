@@ -5,7 +5,7 @@ from logs.logs import logs
 import command_gen_prompts
 from config import gemini_client
 import time
-
+import plugins
 
 
 def now_time():
@@ -90,21 +90,29 @@ def feedback_end_message_gen(user_name_for_start,feedback_type,feedback_message,
     return response.text
 def user_access_list_gen(user_name_for_start, user_id, user_name):
     client = gemini_client
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        config=types.GenerateContentConfig(
-            system_instruction=command_gen_prompts.user_access_list_gen_prompts),
-        contents=f"Полуьзовтель не получил ответа, сообщи ему почему, имя пользователя {user_name_for_start}.")
-    print(f"{now_time()} -> Сообщение ИИ для->   {user_name} ({user_id}): {response.text}")
-    logs(user_id, user_name, f"{now_time()} -> Сообщение ИИ для-> {user_name} ({user_id}): {response.text}")
-    return response.text
+    config_plugins = plugins.get_plugins_config(user_id)
+    if config_plugins["ai_commands"] == True:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            config=types.GenerateContentConfig(
+                system_instruction=command_gen_prompts.user_access_list_gen_prompts),
+            contents=f"Пользователь не получил ответа, сообщи ему почему, имя пользователя {user_name_for_start}.")
+        print(f"{now_time()} -> Сообщение ИИ для->   {user_name} ({user_id}): {response.text}")
+        logs(user_id, user_name, f"{now_time()} -> Сообщение ИИ для-> {user_name} ({user_id}): {response.text}")
+        return response.text
+    else: 
+        return "У вас нет доступа к боту, свяжитесь с @WorldWideWebAdmin"
 def error_message_gen(user_name_for_start, user_id, user_name):
     client = gemini_client
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        config=types.GenerateContentConfig(
-            system_instruction=command_gen_prompts.error_message_gen_prompts),
-        contents=f"Пользователь получил ошибку. Имя пользователя:  {user_name_for_start}.")
-    print(f"{now_time()} -> Сообщение ИИ для->   {user_name} ({user_id}): {response.text}")
-    logs(user_id, user_name, f"{now_time()} -> Сообщение ИИ для-> {user_name} ({user_id}): {response.text}")
-    return response.text
+    config_plugins = plugins.get_plugins_config(user_id)
+    if config_plugins["ai_commands"] == True:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            config=types.GenerateContentConfig(
+                system_instruction=command_gen_prompts.error_message_gen_prompts),
+            contents=f"Пользователь получил ошибку. Имя пользователя:  {user_name_for_start}.")
+        print(f"{now_time()} -> Сообщение ИИ для->   {user_name} ({user_id}): {response.text}")
+        logs(user_id, user_name, f"{now_time()} -> Сообщение ИИ для-> {user_name} ({user_id}): {response.text}")
+        return response.text
+    else:
+        return "Возникла ошибка😭. Чат был сброшен."
