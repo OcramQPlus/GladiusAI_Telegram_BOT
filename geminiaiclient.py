@@ -9,6 +9,7 @@ from aiogram.enums import ParseMode
 from forai import last_request_time, RATE_LIMIT, now_time, waiting_response_generator
 from config import conversations, gemini_client
 import admin 
+import command_gen
 # Обработка сообщения пользователя и отправка ответа
 async def gemini_answer(message: types.Message):
     try:
@@ -58,4 +59,10 @@ async def gemini_answer(message: types.Message):
     except Exception as e:
         print(f"{now_time()} -> [Error]: {str(e)}")
         logs(user_id, user_name, f"{now_time()} -> [Error]: {str(e)}")
-        await waiting_msg.edit_text(f"Произошла ошибка, обратитесь к разработчику(не обязательно): {str(e)} \nЕсли ошибка повторилась попробуйте /clear")
+        user_name = message.from_user.username or "Unknown User"
+        user_id = message.from_user.id
+        user_name_for_start = message.from_user.first_name or "Unknown Name"
+        await waiting_msg.edit_text(f"{command_gen.error_message_gen(user_name_for_start, user_id, user_name)}")
+        # Существующий код обработки ошибки
+        if user_id in conversations:
+            conversations[user_id] = []
