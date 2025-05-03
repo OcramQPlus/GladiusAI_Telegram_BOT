@@ -12,12 +12,14 @@ def get_plugins_config(user_id: int):
     if user_id not in plugins_configs:
         plugins_configs[user_id] = {
             "ai_commands": False,
+            "gemini_client": False
         }
     return plugins_configs[user_id]
 plugins_router = Router()
 def create_plugins_menu() -> InlineKeyboardBuilder:
     plugins_menu = InlineKeyboardBuilder()
     plugins_menu.row (types.InlineKeyboardButton(text="ИИ Команды", callback_data="AI_Commands"))
+    plugins_menu.row(types.InlineKeyboardButton(text="Gemini Ai", callback_data="Gemini"))
     return plugins_menu
 
 @plugins_router.message(Command("plugins"))
@@ -55,4 +57,31 @@ async def ai_commands_off(callback: types.CallbackQuery):
     print(f"{forai.now_time()} -> AICommandsOFF ->   {callback.from_user.username} ({callback.from_user.id}):")
     logs(callback.from_user.id, callback.from_user.username, f"{forai.now_time()} -> AICommandsOFF ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
-    
+@plugins_router.callback_query(F.data == "Gemini")
+async def gemini_client(callback: types.CallbackQuery):
+    gemini_client_menu = InlineKeyboardBuilder()
+    gemini_client_menu.row(types.InlineKeyboardButton(text = "Включить 🔛", callback_data = "gemini_client_on"))
+    gemini_client_menu.row(types.InlineKeyboardButton(text = "Выключить 📴", callback_data = "gemini_client_off"))
+    await callback.message.edit_text("Выберите действие 👌:", reply_markup=gemini_client_menu.as_markup())
+@plugins_router.callback_query(F.data == "gemini_client_on")
+async def gemini_client_on(callback: types.CallbackQuery):
+    config = get_plugins_config(callback.from_user.id)
+    config["gemini_client"] = True
+    await callback.message.edit_text("Gemini AI включена 😊", reply_markup=create_plugins_menu().as_markup())
+    user_id = callback.from_user.id
+    conversations[user_id] = []
+    print(f"{forai.now_time()} -> GeminiAION ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{forai.now_time()} -> GeminiAION ->   {callback.from_user.username} ({callback.from_user.id}):")
+    await callback.answer()
+
+@plugins_router.callback_query(F.data == "gemini_client_off")
+async def gemini_client_off(callback: types.CallbackQuery):
+    config = get_plugins_config(callback.from_user.id)
+    config["gemini_client"] = False
+    await callback.message.edit_text("Gemini AI выключена 😭", reply_markup=create_plugins_menu().as_markup())
+    user_id = callback.from_user.id
+    conversations[user_id] = []
+    print(f"{forai.now_time()} -> GeminiAIOFF ->   {callback.from_user.username} ({callback.from_user.id}):")
+    logs(callback.from_user.id, callback.from_user.username, f"{forai.now_time()} -> GeminiAIOFF ->   {callback.from_user.username} ({callback.from_user.id}):")
+    await callback.answer()
+

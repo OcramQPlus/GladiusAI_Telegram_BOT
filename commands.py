@@ -67,6 +67,7 @@ async def clear_settings(message: types.Message):
         config_plugins["ai_commands"] = False
     else:
         await message.reply("Настройки были сброшены😊")
+    config_plugins["gemini_client"] = False
     print(f"{now_time()} -> /clear_settings ->   {message.from_user.username or 'Unknown User'} ({user_id}):")
     logs (user_id, message.from_user.username or 'Unknown User', f"{now_time()} -> /clear_settings -> {message.from_user.username or 'Unknown User'} ({user_id}):")
 # Команда /help

@@ -1,5 +1,6 @@
 # Description: Модуль обработки сообщений от пользователя
 # Импорт библиотек и файлов
+from pickle import FALSE
 from aiogram import Router, types
 import admin
 import feedback
@@ -11,6 +12,7 @@ import config
 import command_gen
 import forai
 from logs.logs import logs
+from plugins import get_plugins_config
 # Создание роутера
 user_message_router = Router()
 # Обработка сообщений от пользователя
@@ -28,7 +30,6 @@ async def user_message_get(message: types.Message):
     print(f"{forai.now_time()} -> Пользователь получил доступ к боту->   {user_name} ({user_id}): {message.text}")
     logs(user_id, user_name, f"{forai.now_time()} -> Пользователь получил доступ к боту-> {user_name} ({user_id}): {message.text}")
     # Получаем конфигурацию пользователя
-    config = admin.get_user_config(message.from_user.id)
     # Проверяем статус GladiusAI
     if admin.GladiusAI_status == False:
         await message.reply("""GladiusAI на данный момент не работает.
@@ -40,13 +41,16 @@ async def user_message_get(message: types.Message):
         feedback.feedback_status = False
         return
     # Проверяем выбраную ИИ
-    match config["ai_right_now"]:
-        case "mistral_ai_client":
+    config_plugins = get_plugins_config(message.from_user.id)
+    match config_plugins["gemini_client"]:
+        case True:
+            await geminiaiclient.gemini_answer(message)
+            user_id = message.from_user.id  
+        case False:
             await mistralaiclient.mistral_answer(message)
             user_id = message.from_user.id
-        case "gemini_ai_client":
-            await geminiaiclient.gemini_answer(message)
-            user_id = message.from_user.id
+
+
 #У пользователя нет доступа к боту
 @user_message_router.message()
 async def user_message_get(message: types.Message):

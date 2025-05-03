@@ -8,6 +8,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters import Command, BaseFilter
 from aiogram.types import Message
 from logs.logs import logs
+from plugins import get_plugins_config
 # Создание роутера
 admin_router = Router()
 # Глобальная переменная для включения и выключения бота
@@ -43,7 +44,6 @@ def create_admin_menu() -> InlineKeyboardBuilder:
     admin_menu.row(types.InlineKeyboardButton(text="Изменить языковую модель 👤", callback_data="model_selection_admin"))
     admin_menu.row(types.InlineKeyboardButton(text="Отладка 🛠", callback_data="debug"))
     admin_menu.row(types.InlineKeyboardButton(text="ON and OFF 🛑", callback_data="on_off"))
-    admin_menu.row(types.InlineKeyboardButton(text="Выбрать ИИ 🤖", callback_data="ai_choose"))
     admin_menu.row(types.InlineKeyboardButton(text="Удалить это сообщение 💥", callback_data="del_admin_menu"))
     return admin_menu
 # Обработка команды администратора
@@ -72,28 +72,6 @@ async def ai_choose(callback: types.CallbackQuery):
     ai_choose_kb.row(types.InlineKeyboardButton(text="GeminiAI 🌌", callback_data="geminiai"))
     ai_choose_kb.row(types.InlineKeyboardButton(text="Назад ↩", callback_data="back_to_admin_menu"))
     await callback.message.edit_text("Выберите ИИ 🤖:", reply_markup=ai_choose_kb.as_markup())
-    await callback.answer()
-# Выбор MistralAI
-@admin_router.callback_query(F.data == "mistralai")
-async def mistralai(callback: types.CallbackQuery):
-    config = get_user_config(callback.from_user.id)
-    config["ai_right_now"] = "mistral_ai_client"
-    await callback.message.edit_text("Выбран MistralAI 🌪", reply_markup=create_admin_menu().as_markup())
-    user_id = callback.from_user.id
-    conversations[user_id] = []
-    print(f"{now_time()} -> MistralAI ->   {callback.from_user.username} ({callback.from_user.id}):")
-    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> bot_off ->   {callback.from_user.username} ({callback.from_user.id}):")
-    await callback.answer()
-# Выбор GeminiAI
-@admin_router.callback_query(F.data == "geminiai")
-async def geminiai(callback: types.CallbackQuery):
-    config = get_user_config(callback.from_user.id)
-    config["ai_right_now"] = "gemini_ai_client"
-    await callback.message.edit_text("Выбран GeminiAI 🌌", reply_markup=create_admin_menu().as_markup())
-    user_id = callback.from_user.id
-    conversations[user_id] = []
-    print(f"{now_time()} -> GeminiAi ->   {callback.from_user.username} ({callback.from_user.id}):")
-    logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> bot_off ->   {callback.from_user.username} ({callback.from_user.id}):")
     await callback.answer()
 # Включение и выключение бота
 @admin_router.callback_query(F.data == "on_off")
@@ -167,7 +145,8 @@ async def model_selection_admin(callback: types.CallbackQuery):
     print(f"{now_time()} -> model_selection_admin ->   {callback.from_user.username} ({callback.from_user.id}):")
     logs(callback.from_user.id, callback.from_user.username, f"{now_time()} -> model_selection_admin ->   {callback.from_user.username} ({callback.from_user.id}):")
     # Выбор языковой модели для MistralAI
-    if config["ai_right_now"] == "mistral_ai_client":
+    config_plugins = get_plugins_config(callback.from_user.id)
+    if config_plugins["gemini_client"] == False:
         model_selection.row(types.InlineKeyboardButton(text="pixtral-large-latest", callback_data="pixtral_large_latest"))
         model_selection.row(types.InlineKeyboardButton(text="ministral-8b-latest", callback_data="ministral_8b_latest"))
         model_selection.row(types.InlineKeyboardButton(text="mistral-large-latest", callback_data="mistral-large-latest"))
@@ -176,7 +155,7 @@ async def model_selection_admin(callback: types.CallbackQuery):
         model_selection.row(types.InlineKeyboardButton(text="Назад ↩", callback_data="back_to_admin_menu"))
         await callback.message.edit_text("Выберите языковую модель:", reply_markup=model_selection.as_markup())
     # Выбор языковой модели для GeminiAI
-    if config["ai_right_now"] == "gemini_ai_client":
+    else:
         model_selection.row(types.InlineKeyboardButton(text="gemini-2.0-flash", callback_data="gemini_2.0_flash"))
         model_selection.row(types.InlineKeyboardButton(text="gemini-2.0-flash-lite", callback_data="gemini_2.0_flash_lite"))
         model_selection.row(types.InlineKeyboardButton(text="gemini-2.0-pro-exp-02-05", callback_data="gemini_2.0_pro_exp_02_05"))
